@@ -1,32 +1,30 @@
 import { Address4 } from 'ip-address';
+import { IPv4 } from './types';
 import { Subnetwork } from './Subnetwork';
+import { calculateCapacity, createIPv4, verifyHosts } from './helpers';
 
 export class Network {
   readonly ip: Address4;
   readonly capacity: number;
   readonly subnetworks: Subnetwork[];
 
-  constructor(address: string) {
-    this.ip = new Address4(address.replace(/\s/g, ''));
-    this.capacity = 0;
+  constructor(address: IPv4) {
     this.subnetworks = [];
-
-    if (!this.ip.valid) {
-      const error: string | undefined = (this.ip as any).error;
-      if (error) {
-        throw new Error(error);
-      }
-      return;
-    }
-
-    this.capacity = Network.calculateCapacity(this.ip.subnetMask);
+    this.ip = createIPv4(address);
+    this.capacity = calculateCapacity(this.ip.subnetMask);
   }
 
-  // TODO: update
+  vlsm(...hosts: number[]) {
+    return this.initSubnetwork(...hosts);
+  }
 
-  // class
+  private initSubnetwork(...hosts: number[]) {
+    verifyHosts(hosts, this.capacity);
+    hosts = hosts.sort((a, b) => b - a);
 
-  static calculateCapacity(subnetMask: number) {
-    return Math.pow(256, 4 - subnetMask / 8) - 2;
+    // clear subnetworks
+    this.subnetworks.splice(0, this.subnetworks.length);
+
+    // TODO: each hosts is 1 subnetwork
   }
 }
