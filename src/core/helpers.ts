@@ -25,7 +25,7 @@ export function createHost(host: THost): Host {
 }
 
 export function calculateCapacity(subnetMask: number) {
-  return Math.pow(256, 4 - subnetMask / 8) - 2;
+  return 256 ** (4 - subnetMask / 8) - 2;
 }
 
 export function isIpNumInvalid(num: number) {
