@@ -16,6 +16,15 @@ export class Network extends BaseNetwork {
     return this.initSubnetwork(...hosts);
   }
 
+  subnet(size: number): Subnetwork[] {
+    const host: Host = new Host(size);
+    const subnetMask: number = host.exponent + this.ip.subnetMask;
+    const exponent: number = 32 - subnetMask;
+    const hostSize: number = 2 ** exponent - 2;
+    const hosts: number[] = new Array(host.available + 2).fill(hostSize);
+    return this.initSubnetwork(...hosts);
+  }
+
   private initSubnetwork(...hosts: number[]): Subnetwork[] {
     verifyHosts(hosts, this.capacity);
     hosts = hosts.sort((a, b) => b - a);
