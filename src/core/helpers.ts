@@ -56,7 +56,7 @@ export function calculateIp(address: IPv4, n: number): Address4 {
   // try to create ip
   const newIpValue: string = newIp.join('.');
   try {
-    return createIPv4(newIpValue);
+    return createIPv4(newIpValue, ip.subnetMask);
   } catch (_) {
     throw new Error(
       `Resulting IP address is an invalid IP address: ${newIpValue}`
