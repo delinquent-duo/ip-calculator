@@ -2,12 +2,17 @@ import { Address4 } from 'ip-address';
 import { Host } from './Host';
 import { IPv4, THost } from './types';
 
-export function createIPv4(address: IPv4): Address4 {
-  const ip =
-    address instanceof Address4
-      ? address
-      : new Address4(address.replace(/\s/g, ''));
+export function createIPv4(address: IPv4, subnetMask = 32): Address4 {
+  if (typeof address === 'string') {
+    address = address.replace(/\s/g, '');
+    // add subnet mask if no subnet mask
+    if (!address.split('/')[1]) {
+      address = address.concat(`/${subnetMask}`);
+    }
+    address = new Address4(address);
+  }
 
+  const ip: Address4 = address;
   if (!ip.valid) {
     throw new Error((ip as any).error);
   }
