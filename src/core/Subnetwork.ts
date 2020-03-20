@@ -1,15 +1,23 @@
+import { Address4 } from 'ip-address';
 import { Host } from './Host';
-import { Network } from './Network';
 import { IPv4, THost } from './types';
-import { createHost } from './helpers';
+import { BaseNetwork } from './BaseNetwork';
+import { createHost, createIPv4 } from './helpers';
 
-export class Subnetwork extends Network {
+export class Subnetwork extends BaseNetwork {
   readonly id: number;
   readonly host: Host;
 
-  protected constructor(id: number, address: IPv4, host: THost) {
-    super(address);
+  constructor(id: number, address: IPv4, host: THost) {
+    // convert address to string
+    if (address instanceof Address4) {
+      address = address.parsedAddress.join('.');
+    }
+
+    const mHost = createHost(host);
+    const ip = createIPv4(address, mHost.subnetMask);
+    super(ip);
     this.id = id;
-    this.host = createHost(host);
+    this.host = mHost;
   }
 }
