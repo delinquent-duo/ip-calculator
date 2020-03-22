@@ -1,11 +1,10 @@
 <template>
-  <h1>{{ welcomeMessage }}</h1>
+  <TheHeader />
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import TheHeader from '@/components/home/TheHeader.vue';
 
-@Component
-export default class TheHome extends Vue {
-  private welcomeMessage = 'Here Lies the View';
-}
+@Component({ components: { TheHeader } })
+export default class TheHome extends Vue {}
 </script>
