@@ -15,7 +15,7 @@ export class Subnetwork extends BaseNetwork {
     }
 
     const mHost = createHost(host);
-    const ip = createIPv4(address, mHost.subnetMask);
+    const ip = createIPv4(address, mHost.subnetMask.value);
     super(ip);
     this.id = id;
     this.host = mHost;

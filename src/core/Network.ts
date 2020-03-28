@@ -45,7 +45,7 @@ export class Network extends BaseNetwork {
         ? calculateIp(prevSubnetwork.ip, prevSubnetwork.host.available + 2)
         : this.ip;
 
-      sn.push(new Subnetwork(index, address, host));
+      sn.push(new Subnetwork(index + 1, address, host));
     });
 
     return sn;
