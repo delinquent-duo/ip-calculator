@@ -78,8 +78,9 @@ export function convertSubnetMaskToIp(
   subnetMask: number | string
 ): [Address4, number] {
   if (typeof subnetMask === 'string') {
-    const mask: string | undefined = subnetMask.trim().split('/')[1];
-    subnetMask = parseInt(mask);
+    const [mask1, mask2] = subnetMask.trim().split('/');
+    // attempt to parse first mask if 2nd is falsy
+    subnetMask = parseInt(mask2) || parseInt(mask1);
   }
 
   if (isNaN(subnetMask)) {
