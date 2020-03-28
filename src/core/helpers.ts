@@ -64,6 +64,40 @@ export function calculateIp(address: IPv4, n: number): Address4 {
   }
 }
 
+export function createFilledBinary(fill: number, length = 8): string {
+  if (fill > length || fill < 0) {
+    throw new Error(`Invalid fill value: ${fill}`);
+  }
+
+  const bin: number[] = new Array<number>(fill).fill(1);
+  while (bin.length < length) bin.push(0);
+  return bin.join('');
+}
+
+export function convertSubnetMaskToIp(subnetMask: number | string): Address4 {
+  if (typeof subnetMask === 'string') {
+    const mask: string | undefined = subnetMask.trim().split('/')[1];
+    subnetMask = parseInt(mask);
+  }
+
+  if (isNaN(subnetMask)) {
+    throw new Error('Invalid subnet mask.');
+  }
+
+  // divide mask by 8s
+  const res: number[] = [];
+  for (let divided = subnetMask / 8; res.length < 4; divided--) {
+    const multiplier = Math.max(0, divided - 1 < 0 ? divided : 1);
+    res.push(8 * multiplier);
+  }
+
+  const parsedSubnetMask: number[] = res.map((ipNum: number) =>
+    parseInt(createFilledBinary(ipNum), 2)
+  );
+  const ipSubnetMask = parsedSubnetMask.join('.');
+  return createIPv4(ipSubnetMask, 0);
+}
+
 export function verifyHosts(hosts: number[], capacity: number): boolean {
   const total: number = hosts.reduce(
     (total, host) => total + (host > 0 ? host + 2 : 0),
