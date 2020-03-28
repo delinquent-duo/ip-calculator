@@ -3,10 +3,11 @@ import { convertSubnetMaskToIp } from './helpers';
 
 export class SubnetMask {
   readonly ip: Address4;
-  readonly subnetMask: number;
+  readonly value: number;
 
-  constructor(subnetMask: number) {
-    this.subnetMask = subnetMask;
-    this.ip = convertSubnetMaskToIp(subnetMask);
+  constructor(subnetMask: number | string) {
+    const [ip, mask] = convertSubnetMaskToIp(subnetMask);
+    this.ip = ip;
+    this.value = mask;
   }
 }

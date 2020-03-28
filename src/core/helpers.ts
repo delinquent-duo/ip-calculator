@@ -74,7 +74,9 @@ export function createFilledBinary(fill: number, length = 8): string {
   return bin.join('');
 }
 
-export function convertSubnetMaskToIp(subnetMask: number | string): Address4 {
+export function convertSubnetMaskToIp(
+  subnetMask: number | string
+): [Address4, number] {
   if (typeof subnetMask === 'string') {
     const mask: string | undefined = subnetMask.trim().split('/')[1];
     subnetMask = parseInt(mask);
@@ -95,7 +97,8 @@ export function convertSubnetMaskToIp(subnetMask: number | string): Address4 {
     parseInt(createFilledBinary(ipNum), 2)
   );
   const ipSubnetMask = parsedSubnetMask.join('.');
-  return createIPv4(ipSubnetMask, 0);
+  const ip: Address4 = createIPv4(ipSubnetMask, 0);
+  return [ip, subnetMask];
 }
 
 export function verifyHosts(hosts: number[], capacity: number): boolean {
